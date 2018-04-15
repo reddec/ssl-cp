@@ -1,0 +1,44 @@
+<html>
+<head>
+    <link rel="stylesheet" href="static/bootstrap.min.css"/>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark  justify-content-between">
+    <a href="" class="navbar-brand">Keys management</a>
+</nav>
+<div class="container">
+    <br/>
+    <div class="row">
+        <div class="col-12">
+            <form method="POST" action="projects">
+                <div class="input-group">
+                    <input type="text" placeholder="Project name" name="name" class="form-control"/>
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-outline-primary">create</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        {% for project in projects %}
+            <div class="col-md-5 col-lg-4">
+                <div class="card" style="margin-bottom: 5px">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ project.title }}</h5>
+                        <p class="card-text">
+                            {{ project.description }}
+                        </p>
+                        <a href="project/{{ project.id }}" class="btn btn-primary">details</a>
+                        {% if project.ca_cert %}
+                            <a href="project/{{ project.id }}/root/cert" class="card-link">&nbsp;CA cert</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
