@@ -30,7 +30,7 @@
         </form>
     {% else %}
         <div class="row">
-            <div class="col-6">
+            <div class="col-md-6">
                 <form method="post">
                     <div class="form-group">
                         <label for="description">Project description</label>
@@ -43,7 +43,7 @@
 
                 </form>
             </div>
-            <div class="col-6">
+            <div class="col-md-6">
                 <form method="post" action="{{ project.id }}/generate-signed">
                     <div class="form-group">
                         <label for="cn">Common Name</label>
@@ -68,41 +68,21 @@
                 <th>Name</th>
                 <th>Created</th>
                 <th>Expire</th>
-                <th>Revoked</th>
-                <th>Public</th>
-                <th>Private</th>
             </tr>
             </thead>
             {% for cert in project.certificates %}
-                <tr>
-                    <td>{{ cert.id }} </td>
+                <tr{% if not cert.is_active %} class="table-secondary" {% endif %}>
                     <td>
-                        {{ cert.common_name }}
+                        <a href="../certificate/{{ cert.id }}">{{ cert.id }}</a>
+                    </td>
+                    <td>
+                      <a href="../certificate/{{ cert.id }}"> {{ cert.common_name }}</a>
                     </td>
                     <td>
                         {{ cert.created_at.strftime('%Y-%m-%d') }}
                     </td>
                     <td>
                         {{ cert.expire_at.strftime('%Y-%m-%d') }}
-                    </td>
-                    <td>
-                        {% if cert.revoked_at %}
-                            {{ cert.revoked_at.strftime('%Y-%m-%d') }}
-                        {% elif not cert.is_active %}
-                            expired
-                        {% else %}
-                            <form method="post" action="../revoked">
-                                <button class="btn btn-outline-danger" type="submit" name="cert" value="{{ cert.id }}">
-                                    revoke
-                                </button>
-                            </form>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="../certificate/{{ cert.id }}/cert" class="btn btn-outline-success">certificate</a>
-                    </td>
-                    <td>
-                        <a href="../certificate/{{ cert.id }}/key" class="btn btn-outline-info">key</a>
                     </td>
                 </tr>
             {% endfor %}

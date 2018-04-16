@@ -108,6 +108,13 @@ def download_revoked_crl(id: int):
     return resp
 
 
+@app.route('/certificate/<id>')
+def certificate(id: int):
+    id = int(id)
+    cert = models.Certificate.query.get(id)  # type: models.Certificate
+    return render_template('certificate.html', cert=cert)
+
+
 @app.route('/certificate/<id>/cert')
 def download_certificate_cert(id: int):
     id = int(id)
@@ -134,7 +141,7 @@ def revoke_certificate():
     crt = models.Certificate.query.get(cert_id)  # type: models.Certificate
     crt.revoked_at = datetime.now()
     db.session.commit()
-    return redirect(url_for('get_project', id=crt.project_id))
+    return redirect(url_for('certificate', id=cert_id))
 
 
 @app.route('/api/project/<id>/certificates', methods=['GET'])
