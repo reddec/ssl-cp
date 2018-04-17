@@ -1,120 +1,91 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ cert.common_name }}</title>
-    <link rel="stylesheet" href="../static/bootstrap.min.css"/>
-    <style>
-        .details > .row {
-            border-bottom: darkgrey dashed 1px;
-            margin-bottom: 5px;
-            margin-top: 5px;
-            padding-bottom: 5px;
-            padding-top: 5px;
-        }
-
-        .details > .row > div:first-child {
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-    </style>
-</head>
-<body>
-<nav class="navbar navbar-dark bg-dark">
-    <a href="../" class="navbar-brand">Keys management</a>
-    <a href="../project/{{ cert.project_id }}" class="btn btn-outline-light">{{ cert.project.title }}</a>
-</nav>
-<div class="container details">
-    <div class="row">
-        <div class="col-md-2">
-            Common name
+{% extends "base_project.html" %}
+{% block menu %}
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link" href="/project/{{ project.id }}">Home</a>
+        <a class="nav-link" href="/project/{{ project.id }}/certificates">Certificates</a>
+        <div class="nav-link">
+            <hr/>
         </div>
-        <div class="col-md-10">
-            {{ cert.common_name }}
+        <a class="nav-link active" href="/certificate/{{ cert.id }}"># {{ cert.id }}</a>
+        <a class="nav-link" href="/certificate/{{ cert.id }}/stunnel">Stunnel</a>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="details">
+        <div class="row">
+            <div class="col-md-2">
+                Common name
+            </div>
+            <div class="col-md-10">
+                {{ cert.common_name }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Issuer
+            </div>
+            <div class="col-md-10">
+                <a href="../project/{{ cert.project_id }}">{{ cert.project.title }}</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Serial num
+            </div>
+            <div class="col-md-10">
+                {{ cert.id }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Created
+            </div>
+            <div class="col-md-10">
+                {{ cert.created_at.strftime('%Y-%m-%d') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Expire at
+            </div>
+            <div class="col-md-10">
+                {{ cert.expire_at.strftime('%Y-%m-%d') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Revoked
+            </div>
+            <div class="col-md-10">
+                {% if cert.revoked_at %}
+                    {{ cert.revoked_at.strftime('%Y-%m-%d') }}
+                {% elif not cert.is_active %}
+                    expired
+                {% else %}
+                    <form method="post" action="../revoked">
+                        <button class="btn btn-outline-danger" type="submit" name="cert" value="{{ cert.id }}">
+                            revoke
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Public certificate
+            </div>
+            <div class="col-md-10">
+                <pre>{{ cert.public_cert.decode() }}</pre>
+                <a href="{{ cert.id }}/cert" class="btn btn-outline-success">download</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Private key
+            </div>
+            <div class="col-md-10">
+                <a href="{{ cert.id }}/key" class="btn btn-outline-success">download</a>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            Issuer
-        </div>
-        <div class="col-md-10">
-            <a href="../project/{{ cert.project_id }}">{{ cert.project.title }}</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            Serial num
-        </div>
-        <div class="col-md-10">
-            {{ cert.id }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            Created
-        </div>
-        <div class="col-md-10">
-            {{ cert.created_at.strftime('%Y-%m-%d') }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            Expire at
-        </div>
-        <div class="col-md-10">
-            {{ cert.expire_at.strftime('%Y-%m-%d') }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            Revoked
-        </div>
-        <div class="col-md-10">
-            {% if cert.revoked_at %}
-                {{ cert.revoked_at.strftime('%Y-%m-%d') }}
-            {% elif not cert.is_active %}
-                expired
-            {% else %}
-                <form method="post" action="../revoked">
-                    <button class="btn btn-outline-danger" type="submit" name="cert" value="{{ cert.id }}">
-                        revoke
-                    </button>
-                </form>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            Public certificate
-        </div>
-        <div class="col-md-10">
-            <pre>{{ cert.public_cert.decode() }}</pre>
-            <a href="{{ cert.id }}/cert" class="btn btn-outline-success">download</a>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-2">
-            Private key
-        </div>
-        <div class="col-md-10">
-            <a href="{{ cert.id }}/key" class="btn btn-outline-success">download</a>
-        </div>
-    </div>
-</div>
-<div class="container">
-    <h2>Stunnel</h2>
-    <div>
-    <ul>
-        <li>unpack archive</li>
-        <li>change dir to unpacked config</li>
-        <li>run <code>stunnel4 stunnel.conf</code></li>
-    </ul>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <a href="../../cookbook/stunnel/{{ cert.id }}/server" class="btn btn-outline-success">Download server</a>
-        </div>
-    </div>
-</div>
-</body>
-</html>
+{% endblock %}

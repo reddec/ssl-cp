@@ -1,5 +1,5 @@
 from typing import List, Tuple
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from OpenSSL import crypto, SSL
 
@@ -48,9 +48,9 @@ def create_cert(cn: str, days: int, ca_private: bytes, ca_cert: bytes, sn: int) 
 
 def create_revoke_list(ca_cert: bytes, ca_key: bytes, serials: List[Tuple[int, datetime]]) -> bytes:
     crl = crypto.CRL()
-    crl.set_version(0)
 
-    crl.set_lastUpdate(datetime.now().strftime('%Y%m%d%H%M%SZ').encode())
+    crl.set_lastUpdate(datetime.utcnow().strftime('%Y%m%d%H%M%SZ').encode())
+    crl.set_nextUpdate((datetime.utcnow() + timedelta(days=365)).strftime('%Y%m%d%H%M%SZ').encode())
     for serial, revoked_at in serials:
         revoked = crypto.Revoked()
         revoked.set_serial(hex(serial)[2:].encode())

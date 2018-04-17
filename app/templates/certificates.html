@@ -1,0 +1,67 @@
+{% extends "base_project.html" %}
+{% block menu %}
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link" href="/project/{{ project.id }}">Home</a>
+        <a class="nav-link active" href="/project/{{ project.id }}/certificates">Certificates</a>
+    </div>
+{% endblock %}
+{% block body %}
+    <form method="post" action="/project/{{ project.id }}/generate-signed">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+                    <label for="cn">Common Name</label>
+                    <input id="cn" class="form-control" type="text" name="cn"
+                           placeholder="certificate common name"/>
+                    <small class="form-text text-muted">general node, domain or system name</small>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="days">Days</label>
+                    <input id="days" class="form-control" type="number" name="days" placeholder="Days"
+                           value="365"/>
+                    <small class="form-text text-muted">expiration</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label for="btn">&nbsp;</label><br/>
+                <button id="btn" type="submit" class="btn btn-outline-primary">generate and sign</button>
+            </div>
+        </div>
+
+    </form>
+    <br/>
+    <div class="row">
+
+        <div class="col-md-12">
+            <table class="table table-light">
+                <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Name</th>
+                    <th>Created</th>
+                    <th>Expire</th>
+                </tr>
+                </thead>
+                {% for cert in project.certificates %}
+                    <tr{% if not cert.is_active %} class="table-secondary" {% endif %}>
+                        <td>
+                            <a href="/certificate/{{ cert.id }}">{{ cert.id }}</a>
+                        </td>
+                        <td>
+                            <a href="/certificate/{{ cert.id }}"> {{ cert.common_name }}</a>
+                        </td>
+                        <td>
+                            {{ cert.created_at.strftime('%Y-%m-%d') }}
+                        </td>
+                        <td>
+                            {{ cert.expire_at.strftime('%Y-%m-%d') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

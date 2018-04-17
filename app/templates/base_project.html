@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{{ project.title }}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/bootstrap.min.css"/>
+    <style>
+        .details > .row {
+            border-bottom: darkgrey dashed 1px;
+            margin-bottom: 5px;
+            margin-top: 5px;
+            padding-bottom: 5px;
+            padding-top: 5px;
+        }
+
+        .details > .row > div:first-child {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <a href="/" class="navbar-brand">{{ project.title }}</a>
+</nav>
+<div style="height: 10px"></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 col-xl-1">
+            <!-- menu -->
+            {% block menu %}{% endblock %}
+        </div>
+        <div class="col-md-10 col-xl-11">
+            <!-- body -->
+            <div class="container-fluid">
+                {% block body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

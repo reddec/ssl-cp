@@ -1,0 +1,12 @@
+[Unit]
+Description={{cert.common_name}} SSL server
+
+[Service]
+ExecStart=/usr/bin/stunnel4 stunnel.conf
+Restart=always
+RestartSec=15s
+WorkingDirectory=/opt/stunnel/{{cert.common_name}}/server
+
+
+[Install]
+WantedBy=multi-user.target

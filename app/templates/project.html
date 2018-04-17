@@ -1,93 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{{ project.title }}</title>
-    <link rel="stylesheet" href="../../static/bootstrap.min.css"/>
-</head>
-<body>
-<nav class="navbar navbar-dark bg-dark">
-    <a href="../../" class="navbar-brand">Keys management</a>
-    <a class="btn btn-outline-light" href="{{ project.id }}/root/cert">CA certificate</a>
-    <a class="btn btn-outline-info" href="{{ project.id }}/revoked">Revoke list</a>
-</nav>
-<div class="container">
-    <h1>{{ project.title }}</h1>
-
-
-    <br/>
-    {% if not project.ca_cert %}
-        <h2>Generate root CA</h2>
-        <form method="POST" action="{{ project.id }}/generate-root">
-            <div class="input-group">
-                <input class="form-control" type="text" name="cn" placeholder="Common name"
-                       value="{{ project.title | lower }}"/>
-                <input class="form-control" type="number" name="days" placeholder="Days" value="365"/>
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-outline-primary">generate root CA</button>
-                </div>
-            </div>
-        </form>
-    {% else %}
+{% extends "base_project.html" %}
+{% block menu %}
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link active" href="{{ project.id }}">Home</a>
+        <a class="nav-link" href="{{ project.id }}/certificates">Certificates</a>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="details">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-2">
+                Project description
+            </div>
+            <div class="col-md-10">
                 <form method="post">
                     <div class="form-group">
-                        <label for="description">Project description</label>
                         <textarea id="description" class="form-control" name="description" placeholder="Description"
                                   style="margin-bottom: 5px">{{ project.description }}</textarea>
                     </div>
                     <button type="submit" class="btn btn-outline-primary">
                         update description
                     </button>
-
-                </form>
-            </div>
-            <div class="col-md-6">
-                <form method="post" action="{{ project.id }}/generate-signed">
-                    <div class="form-group">
-                        <label for="cn">Common Name</label>
-                        <input id="cn" class="form-control" type="text" name="cn"
-                               placeholder="certificate common name"/>
-                        <small class="form-text text-muted">General node, domain or system name</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="days">Days before expiration</label>
-                        <input id="days" class="form-control" type="number" name="days" placeholder="Days" value="365"/>
-
-                    </div>
-                    <button type="submit" class="btn btn-outline-primary">generate and sign</button>
                 </form>
             </div>
         </div>
-        <br/>
-        <table class="table table-light">
-            <thead>
-            <tr>
-                <th>S/N</th>
-                <th>Name</th>
-                <th>Created</th>
-                <th>Expire</th>
-            </tr>
-            </thead>
-            {% for cert in project.certificates %}
-                <tr{% if not cert.is_active %} class="table-secondary" {% endif %}>
-                    <td>
-                        <a href="../certificate/{{ cert.id }}">{{ cert.id }}</a>
-                    </td>
-                    <td>
-                      <a href="../certificate/{{ cert.id }}"> {{ cert.common_name }}</a>
-                    </td>
-                    <td>
-                        {{ cert.created_at.strftime('%Y-%m-%d') }}
-                    </td>
-                    <td>
-                        {{ cert.expire_at.strftime('%Y-%m-%d') }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        {% if project.ca_cert %}
+            <div class="row">
+                <div class="col-md-2">
+                    CA certificate
+                </div>
+                <div class="col-md-10">
+                    <pre>{{ project.ca_cert.decode() }}</pre>
+                    <a class="btn btn-outline-success" href="{{ project.id }}/root/cert">download</a>
+                    <br/>
+                    <small>Public certificate</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    CRL
+                </div>
+                <div class="col-md-10">
+
+                    <a class="btn btn-outline-info" href="{{ project.id }}/revoked">download</a>
+                    <br/>
+                    <small>Signed list of revoked certificates</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    CA private key
+                </div>
+                <div class="col-md-10">
+                    <a class="btn btn-danger" href="{{ project.id }}/root/key">download</a>
+                    <br/>
+                    <small><b>Sensitive information!</b></small>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <br/>
+    {% if not project.ca_cert %}
+        <h2>Generate root CA</h2>
+        <form method="POST" action="{{ project.id }}/generate-root">
+            <div class="row">
+                <div class="col-md-7">
+                    <label for="catitle">Common name</label>
+                    <input id="catitle" class="form-control" type="text" name="cn" placeholder="Common name"
+                           value="{{ project.title | lower }}"/>
+                </div>
+                <div class="col-md-3">
+                    <label for="catitle">Valid days</label>
+                    <input id="cadays" class="form-control" type="number" name="days" placeholder="Days" value="365"/>
+                </div>
+                <div class="col-md-2">
+                    <label>&nbsp;</label><br/>
+                    <button type="submit" class="btn btn-outline-primary">generate</button>
+                </div>
+            </div>
+        </form>
+
     {% endif %}
-</div>
-</body>
-</html>
+{% endblock %}

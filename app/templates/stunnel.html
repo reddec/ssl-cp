@@ -1,0 +1,73 @@
+{% extends "base_project.html" %}
+{% block menu %}
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link" href="/project/{{ project.id }}">Home</a>
+        <a class="nav-link" href="/project/{{ project.id }}/certificates">Certificates</a>
+        <div class="nav-link">
+            <hr/>
+        </div>
+        <a class="nav-link" href="/certificate/{{ cert.id }}"># {{ cert.id }}</a>
+        <a class="nav-link active" href="/certificate/{{ cert.id }}/stunnel">Stunnel</a>
+    </div>
+{% endblock %}
+{% block body %}
+    <div class="details">
+        <h2>Stunnel</h2>
+        <div>
+            <ul>
+                <li>unpack archive</li>
+                <li>change dir to unpacked config</li>
+                <li><code>sudo bash ./install.sh </code></li>
+            </ul>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Server
+            </div>
+            <div class="col-md-10">
+                <form action="../../cookbook/stunnel/{{ cert.id }}/server" method="GET">
+                    <div class="form-group">
+                        <label for="stsrvconn">Connect to port or address</label>
+                        <input id="stsrvconn" value="8080" type="text" class="form-control" name="connect"
+                               placeholder="port or address to connect">
+                        <small class="form-text text-muted">Internal port or address to where stunnel will connect
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="stsrvacc">Listening port or address</label>
+                        <input id="stsrvacc" value="8443" type="text" class="form-control" name="accept"
+                               placeholder="port or address to listen">
+                        <small class="form-text text-muted">Public port or address which stunnel will listen and accept
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">Download server</button>
+                </form>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                Client
+            </div>
+            <div class="col-md-10">
+                <form action="../../cookbook/stunnel/{{ cert.id }}/client" method="GET">
+                    <div class="form-group">
+                        <label for="stsrvconn">Connect to address</label>
+                        <input id="stsrvconn" value="" type="text" class="form-control" name="connect"
+                               placeholder="example.com:8443">
+                        <small class="form-text text-muted">Remote port or address to where stunnel will connect</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="stsrvacc">Listening port or address</label>
+                        <input id="stsrvacc" value="8080" type="text" class="form-control" name="accept"
+                               placeholder="port or address to listen">
+                        <small class="form-text text-muted">Internal port or address which stunnel will listen and
+                            accept
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-outline-success">Download client</button>
+                </form>
+
+            </div>
+        </div>
+{% endblock %}

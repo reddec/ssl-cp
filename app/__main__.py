@@ -2,6 +2,7 @@ from typing import List
 
 from app import app, db, models
 from app import api, cookbook
+from app.certificates import *
 
 from sqlalchemy import or_
 from flask import render_template, request, redirect, url_for, make_response, abort
@@ -80,8 +81,8 @@ def create_child(project_id: int, cn: str, days: int) -> models.Certificate:
 
 @app.route('/project/<id>/generate-signed', methods=['POST'])
 def create_child_certificate(id: int):
-    create_child(int(id), request.form['cn'], int(request.form['days']))
-    return redirect(url_for('get_project', id=id))
+    crt = create_child(int(id), request.form['cn'], int(request.form['days']))
+    return redirect(url_for('certificate', id=crt.id))
 
 
 @app.route('/project/<id>/root/cert')
@@ -113,7 +114,7 @@ def download_revoked_crl(id: int):
 def certificate(id: int):
     id = int(id)
     cert = models.Certificate.query.get(id)  # type: models.Certificate
-    return render_template('certificate.html', cert=cert)
+    return render_template('certificate.html', cert=cert, project=cert.project)
 
 
 @app.route('/certificate/<id>/cert')
