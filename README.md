@@ -1,6 +1,7 @@
 # SSL-CP
 
 ![license](https://img.shields.io/github/license/reddec/ssl-cp.svg) ![python](https://img.shields.io/badge/python-3%2B-yellow.svg)
+
 Control panel for organize, manager, sign and revoke certificates.
 Project is still under **heavy development** but it's already using for internal projects.
 
