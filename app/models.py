@@ -1,3 +1,5 @@
+from typing import List
+
 from app import db
 from datetime import datetime
 from sqlalchemy.orm import deferred
@@ -27,3 +29,9 @@ class Certificate(db.Model):
     def is_active(self):
         n = datetime.now()
         return n < self.expire_at and self.revoked_at is None
+
+    @staticmethod
+    def revoked(project_id: int) -> List['Certificate']:
+        return Certificate.query \
+            .filter(Certificate.project_id == project_id) \
+            .filter(Certificate.revoked_at.isnot(None))

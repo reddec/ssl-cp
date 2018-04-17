@@ -46,13 +46,18 @@ def create_cert(cn: str, days: int, ca_private: bytes, ca_cert: bytes, sn: int) 
            crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey)
 
 
-def create_revoke_list(serials: List[Tuple[int, datetime]]) -> bytes:
+def create_revoke_list(ca_cert: bytes, ca_key: bytes, serials: List[Tuple[int, datetime]]) -> bytes:
     crl = crypto.CRL()
+    crl.set_version(0)
+
+    crl.set_lastUpdate(datetime.now().strftime('%Y%m%d%H%M%SZ').encode())
     for serial, revoked_at in serials:
         revoked = crypto.Revoked()
         revoked.set_serial(hex(serial)[2:].encode())
-        revoked.set_reason(None)
+        revoked.set_reason(b'keyCompromise')
         revoked.set_rev_date(revoked_at.strftime('%Y%m%d%H%M%SZ').encode())
         crl.add_revoked(revoked)
-
+    key = crypto.load_privatekey(crypto.FILETYPE_PEM, ca_key)
+    cert = crypto.load_certificate(crypto.FILETYPE_PEM, ca_cert)
+    crl.sign(cert, key, digest.encode())
     return crypto.dump_crl(crypto.FILETYPE_PEM, crl)

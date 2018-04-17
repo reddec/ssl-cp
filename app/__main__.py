@@ -1,7 +1,8 @@
 from typing import List
 
 from app import app, db, models
-from app import api
+from app import api, cookbook
+
 from sqlalchemy import or_
 from flask import render_template, request, redirect, url_for, make_response, abort
 from datetime import datetime, timedelta
@@ -98,10 +99,10 @@ def download_project_ca_cert(id: int):
 @app.route('/project/<id>/revoked')
 def download_revoked_crl(id: int):
     id = int(id)
-    certs = models.Certificate.query \
-        .filter(models.Certificate.project_id == id) \
-        .filter(models.Certificate.revoked_at.isnot(None))  # type: List[models.Certificate]
-    content = api.create_revoke_list([(cert.id, cert.revoked_at) for cert in certs])
+    certs = models.Certificate.revoked(id)
+    project = models.Project.query.get(id)  # type: models.Project
+    content = api.create_revoke_list(project.ca_cert, project.ca_private,
+                                     [(cert.id, cert.revoked_at) for cert in certs])
     resp = make_response(content)
     resp.headers['Content-Type'] = 'text/plain'
     resp.headers['Content-Disposition'] = 'attachment; filename="revoked-' + str(id) + ".crl"
