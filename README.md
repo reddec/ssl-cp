@@ -5,6 +5,10 @@
 Control panel for organize, manager, sign and revoke certificates.
 Project is still under **heavy development** but it's already using for internal projects.
 
+# Docker
+
+Look at `Dockerfile` or pull from dockerhub https://hub.docker.com/r/reddec/ssl-cp/
+
 # Install
 
 Requirements: python3, virtual environment
@@ -14,7 +18,7 @@ Requirements: python3, virtual environment
 3. Create virtual environment: `python3 -m venv venv`
 4. Enable it: `. ./venv/bin/activate`
 5. Install requirements: `pip3 install -r requirements.txt`
-6. Run it: `python3 app/__main__.py`
+6. Run it: `python3 main.py`
 
 # Features
 

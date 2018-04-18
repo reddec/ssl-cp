@@ -176,7 +176,3 @@ def api_list_project_inactive_certificates(id: int):
         models.Certificate.revoked_at.isnot(None)
     ))  # type: List[models.Certificate]
     return "\n".join(str(cert.id) for cert in certs)
-
-
-if __name__ == '__main__':
-    app.run()
