@@ -1,4 +1,4 @@
-from app import app, models, db
+from app import app, models, db, certs_tools
 from flask import request, url_for, render_template, redirect, abort, make_response
 
 
@@ -38,7 +38,7 @@ def get_project(id: int):
 def gen_root_ca(id: int):
     id = int(id)
     project = models.Project.query.get(id)
-    cert, priv = api.create_ca(request.form['cn'], int(request.form['days']))
+    cert, priv = certs_tools.create_ca(request.form['cn'], int(request.form['days']))
     project.ca_private = priv
     project.ca_cert = cert
     db.session.commit()
@@ -68,8 +68,8 @@ def download_revoked_crl(id: int):
     id = int(id)
     certs = models.Certificate.revoked(id)
     project = models.Project.query.get(id)  # type: models.Project
-    content = api.create_revoke_list(project.ca_cert, project.ca_private,
-                                     [(cert.id, cert.revoked_at) for cert in certs])
+    content = certs_tools.create_revoke_list(project.ca_cert, project.ca_private,
+                                             [(cert.id, cert.revoked_at) for cert in certs])
     resp = make_response(content)
     resp.headers['Content-Type'] = 'text/plain'
     resp.headers['Content-Disposition'] = 'attachment; filename="revoked-' + str(id) + ".crl"
