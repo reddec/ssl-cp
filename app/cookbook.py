@@ -1,4 +1,4 @@
-from app import app, db, models, api
+from app import app, db, models, certs_tools
 from flask import make_response, request
 from jinja2 import Environment, FileSystemLoader
 import tarfile, io
@@ -20,7 +20,7 @@ def stunnel_server(cert_id: int):
     ca_key = project.ca_private
     key_file = cert.private_key
     cert_file = cert.public_cert
-    crl_file = api.create_revoke_list(ca_cert, ca_key, [(cert.id, cert.revoked_at) for cert in certs])
+    crl_file = certs_tools.create_revoke_list(ca_cert, ca_key, [(cert.id, cert.revoked_at) for cert in certs])
     config = render('cookbook', 'stunnel', 'server.conf', cert=cert,
                     accept=request.args.get('accept', 0),
                     connect=request.args.get('connect', 0))
@@ -53,7 +53,7 @@ def stunnel_client(cert_id: int):
     ca_key = project.ca_private
     key_file = cert.private_key
     cert_file = cert.public_cert
-    crl_file = api.create_revoke_list(ca_cert, ca_key, [(cert.id, cert.revoked_at) for cert in certs])
+    crl_file = certs_tools.create_revoke_list(ca_cert, ca_key, [(cert.id, cert.revoked_at) for cert in certs])
     config = render('cookbook', 'stunnel', 'client.conf', cert=cert,
                     accept=request.args.get('accept', 0),
                     connect=request.args.get('connect', 0))

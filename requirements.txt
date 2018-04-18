@@ -1,5 +1,5 @@
-flask
-flask-sqlalchemy
-psycopg2
-pyopenssl
-cryptography
+flask==0.12.2
+flask-sqlalchemy==2.3
+psycopg2==2.7.4
+pyopenssl==17.5.0
+cryptography==2.2.2
