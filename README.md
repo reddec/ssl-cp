@@ -27,8 +27,6 @@ Requirements: python3, virtual environment
 Yes, ssl-cp contains full-featured **mobile friendly** flask-based panel.
 And automation friendly API!
 
-
-
 ## Multi-project
 
 System allows you separate certificates by projects. Each project contains own CA (private key + public cert) and list of issued (signed by CA) certificates.
@@ -40,6 +38,9 @@ One click for generate self-signed CA. In roadmap - upload your own
 
 After generation you can download and use it as always
 ![screencapture-127-0-0-1-5000-project-1-2018-04-17-21_32_54](https://user-images.githubusercontent.com/6597086/38889281-e9275b22-4286-11e8-86fd-3bd688ee07c4.png)
+## Use your own CA
+
+You can import your own public and private CA certificate and key.
 
 ## One-click generation of signed certifiactes
 
