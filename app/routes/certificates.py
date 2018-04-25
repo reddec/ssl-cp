@@ -1,12 +1,7 @@
 from app import app, models, db
+from app.utils.archive import dict_to_archive
 from flask import render_template, make_response, request, redirect, url_for
 from datetime import datetime
-
-
-@app.route('/certificate/<cert_id>/stunnel')
-def stunnel_cookbook(cert_id: int):
-    cert = models.Certificate.query.get(int(cert_id))
-    return render_template('stunnel.html', project=cert.project, cert=cert)
 
 
 @app.route('/certificate/<id>')
@@ -33,6 +28,23 @@ def download_certificate_key(id: int):
     resp = make_response(cert.private_key)
     resp.headers['Content-Type'] = 'text/plain'
     resp.headers['Content-Disposition'] = 'attachment; filename="' + str(id) + ".key"
+    return resp
+
+
+@app.route('/certificate/<id>/export')
+def export_certificate_with_assets(id: int):
+    id = int(id)
+    cert = models.Certificate.query.get(id)  # type: models.Certificate
+
+    archive = dict_to_archive({
+        cert.common_name + '/' + 'node.crt': cert.public_cert,
+        cert.common_name + '/' + 'node.key': cert.private_key,
+        cert.common_name + '/' + 'ca.crt': cert.project.ca_cert
+    })
+
+    resp = make_response(archive)
+    resp.headers['Content-Type'] = 'application/gzip'
+    resp.headers['Content-Disposition'] = 'attachment; filename="' + cert.common_name + ".tar.gz"
     return resp
 
 

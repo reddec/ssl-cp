@@ -7,7 +7,11 @@
             <hr/>
         </div>
         <a class="nav-link" href="/certificate/{{ cert.id }}"># {{ cert.id }}</a>
+        <div class="nav-link">
+            <hr/>
+        </div>
         <a class="nav-link active" href="/certificate/{{ cert.id }}/stunnel">Stunnel</a>
+        <a class="nav-link" href="/certificate/{{ cert.id }}/nginx">Nginx</a>
     </div>
 {% endblock %}
 {% block body %}

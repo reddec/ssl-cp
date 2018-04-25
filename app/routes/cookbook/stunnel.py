@@ -1,15 +1,9 @@
-from app import app, db, models, certs_tools
+from app import app, models, certs_tools
 from app.utils.archive import add_to_archive
-from flask import make_response, request
-from jinja2 import Environment, FileSystemLoader
+from app.routes.cookbook import render
+from flask import make_response, request, render_template
+
 import tarfile, io
-import os
-
-
-def render(*asset_path, **kwargs):
-    env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), '..', "assets")))
-    templ = env.get_template(os.path.join(*asset_path))
-    return templ.render(**kwargs).encode()
 
 
 @app.route('/cookbook/stunnel/<cert_id>/server')
@@ -76,3 +70,9 @@ def stunnel_client(cert_id: int):
     resp.headers['Content-Disposition'] = 'attachment; filename="' + str(
         cert.id) + "-" + cert.common_name + "-client.tar.gz"
     return resp
+
+
+@app.route('/certificate/<cert_id>/stunnel')
+def stunnel_cookbook(cert_id: int):
+    cert = models.Certificate.query.get(int(cert_id))
+    return render_template('cookbook/stunnel.html', project=cert.project, cert=cert)

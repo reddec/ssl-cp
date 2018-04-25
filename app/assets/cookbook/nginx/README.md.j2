@@ -1,0 +1,20 @@
+# Example configuration of NGinx
+
+* CA: {{ project.title }}
+* Node: {{ cert.common_name }}
+* Issued: {{ cert.created_at }}
+* Valid till: {{ cert.expire_at }}
+
+In sample configuration also included basic reverse proxy. Feel free to change it
+
+## Requirements
+
+* nginx
+
+## Installation
+
+    sudo apt install -y nginx
+
+## Usage
+
+    sudo nginx -c path/to/{{ cert.common_name }}/nginx.conf

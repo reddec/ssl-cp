@@ -3,6 +3,7 @@ from typing import List
 from app import db
 from datetime import datetime, timedelta
 from sqlalchemy.orm import deferred
+from sqlalchemy import UniqueConstraint
 
 
 class Project(db.Model):
@@ -26,6 +27,7 @@ class Certificate(db.Model):
     revoked_at = db.Column(db.DateTime)
 
     project = db.relationship('Project', back_populates='certificates')
+    __table_args__ = (UniqueConstraint('project_id', 'common_name', name='_project_cert_common_name_uc'),)
 
     @property
     def is_active(self):
