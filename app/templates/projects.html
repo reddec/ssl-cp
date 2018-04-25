@@ -30,9 +30,12 @@
                         <p class="card-text">
                             {{ project.description }}
                         </p>
-                        <a href="project/{{ project.id }}" class="btn btn-primary">details</a>
+
                         {% if project.ca_cert %}
+                            <a href="project/{{ project.id }}/certificates" class="btn btn-primary">certs</a>
                             <a href="project/{{ project.id }}/root/cert" class="card-link">&nbsp;CA cert</a>
+                        {% else %}
+                            <a href="project/{{ project.id }}" class="btn btn-primary">details</a>
                         {% endif %}
                     </div>
                 </div>

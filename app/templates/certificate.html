@@ -11,81 +11,80 @@
     </div>
 {% endblock %}
 {% block body %}
-    <div class="details">
-        <div class="row">
-            <div class="col-md-2">
-                Common name
-            </div>
-            <div class="col-md-10">
-                {{ cert.common_name }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                Issuer
-            </div>
-            <div class="col-md-10">
-                <a href="../project/{{ cert.project_id }}">{{ cert.project.title }}</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                Serial num
-            </div>
-            <div class="col-md-10">
-                {{ cert.id }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                Created
-            </div>
-            <div class="col-md-10">
-                {{ cert.created_at.strftime('%Y-%m-%d') }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                Expire at
-            </div>
-            <div class="col-md-10">
-                {{ cert.expire_at.strftime('%Y-%m-%d') }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                Revoked
-            </div>
-            <div class="col-md-10">
-                {% if cert.revoked_at %}
-                    {{ cert.revoked_at.strftime('%Y-%m-%d') }}
-                {% elif not cert.is_active %}
-                    expired
-                {% else %}
-                    <form method="post" action="../revoked">
-                        <button class="btn btn-outline-danger" type="submit" name="cert" value="{{ cert.id }}">
-                            revoke
-                        </button>
-                    </form>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                Public certificate
-            </div>
-            <div class="col-md-10">
-                <pre>{{ cert.public_cert.decode() }}</pre>
-                <a href="{{ cert.id }}/cert" class="btn btn-outline-success">download</a>
+    <div class="row">
+
+        <div class="col-md-6">
+            <h2>Basic information</h2>
+            <div class="details">
+                <div class="row">
+                    <div class="col-md-4">
+                        Common name
+                    </div>
+                    <div class="col-md-8">
+                        {{ cert.common_name }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Issuer
+                    </div>
+                    <div class="col-md-8">
+                        <a href="../project/{{ cert.project_id }}">{{ cert.project.title }}</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Serial num
+                    </div>
+                    <div class="col-md-8">
+                        {{ cert.id }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Created
+                    </div>
+                    <div class="col-md-8">
+                        {{ cert.created_at.strftime('%Y-%m-%d') }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Expire at
+                    </div>
+                    <div class="col-md-8">
+                        {{ cert.expire_at.strftime('%Y-%m-%d') }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        Revoked
+                    </div>
+                    <div class="col-md-8">
+                        {% if cert.revoked_at %}
+                            {{ cert.revoked_at.strftime('%Y-%m-%d') }}
+                        {% elif not cert.is_active %}
+                            expired
+                        {% else %}
+                            <form method="post" action="../revoked">
+                                <button class="btn btn-outline-danger" type="submit" name="cert" value="{{ cert.id }}">
+                                    revoke
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-2">
-                Private key
-            </div>
-            <div class="col-md-10">
-                <a href="{{ cert.id }}/key" class="btn btn-outline-success">download</a>
+        <div class="col-md-6">
+            <h2>Certificate</h2>
+            <pre>{{ cert.public_cert.decode() }}</pre>
+            <div class="btn-group">
+                <a href="{{ cert.id }}/cert" class="btn btn-outline-success">public certificate</a>
+                <a href="{{ cert.id }}/key" class="btn btn-outline-primary">private key</a>
             </div>
         </div>
+
     </div>
 {% endblock %}

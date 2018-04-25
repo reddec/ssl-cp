@@ -6,120 +6,127 @@
     </div>
 {% endblock %}
 {% block body %}
-    <div class="details">
-        <div class="row">
-            <div class="col-md-2">
-                Project description
-            </div>
-            <div class="col-md-10">
-                <form method="post">
-                    <div class="form-group">
+    <div class="container">
+        <h2>Project description</h2>
+        <p>{{ project.description }}</p>
+        <form method="post">
+            <div class="form-group">
                         <textarea id="description" class="form-control" name="description" placeholder="Description"
                                   style="margin-bottom: 5px">{{ project.description }}</textarea>
-                    </div>
-                    <button type="submit" class="btn btn-outline-primary">
-                        update description
-                    </button>
-                </form>
             </div>
-        </div>
-        {% if project.ca_cert %}
-            <div class="row">
-                <div class="col-md-2">
-                    CA certificate
-                </div>
-                <div class="col-md-10">
-                    <pre>{{ project.ca_cert.decode() }}</pre>
-                    <a class="btn btn-outline-success" href="{{ project.id }}/root/cert">download</a>
-                    <br/>
-                    <small>Public certificate</small>
-                    <br/>
-                    <a href="https://askubuntu.com/a/377570/170954">Read how to install CA certificate globally</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    CRL
-                </div>
-                <div class="col-md-10">
+            <button type="submit" class="btn btn-outline-primary">
+                update description
+            </button>
+        </form>
+        <h2>Root certificate authority</h2>
+        <p>
+            Certificate authority or certification authority (CA) is an entity that issues digital
+            certificates. A digital certificate certifies the ownership of a public key by the named subject of
+            the
+            certificate. This allows others (relying parties) to rely upon signatures or on assertions made
+            about
+            the
+            private key that corresponds to the certified public key. A CA acts as a trusted third party—trusted
+            both by
+            the subject (owner) of the certificate and by the party relying upon the certificate. The format of
+            these
+            certificates is specified by the X.509 standard.
+        </p>
+        <small><a href="https://en.wikipedia.org/wiki/Certificate_authority">© Wikipedia</a></small>
 
-                    <a class="btn btn-outline-info" href="{{ project.id }}/revoked">download</a>
-                    <br/>
-                    <small>Signed list of revoked certificates</small>
+
+
+        {% if project.ca_cert %}
+            <div class="details">
+                <div class="row">
+                    <div class="col-md-4">
+                        Certificates
+                    </div>
+                    <div class="col-md-8">
+                        <a href="https://askubuntu.com/a/377570/170954">Read how to install CA certificate globally</a>
+                        <pre>{{ project.ca_cert.decode() }}</pre>
+                        <div class="btn-group">
+                            <a class="btn btn-outline-success" href="{{ project.id }}/root/cert">public cert</a>
+                            <a class="btn btn-outline-danger" href="{{ project.id }}/root/key">private key</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    Export certificates
+                <div class="row">
+                    <div class="col-md-4">
+                        CRL
+                    </div>
+                    <div class="col-md-8">
+
+                        <a class="btn btn-outline-info" href="{{ project.id }}/revoked">download</a>
+                        <br/>
+                        <small>Signed list of revoked certificates</small>
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    <a class="btn btn-outline-success" href="{{ project.id }}/export/certs">download</a>
-                    <br/>
-                    <small>Export CA and nodes certificates with CRL list</small>
+                <div class="row">
+                    <div class="col-md-4">
+                        Export certificates
+                    </div>
+                    <div class="col-md-8">
+                        <a class="btn btn-outline-success" href="{{ project.id }}/export/certs">download</a>
+                        <br/>
+                        <small>Export CA and nodes certificates with CRL list</small>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    CA private key
-                </div>
-                <div class="col-md-10">
-                    <a class="btn btn-danger" href="{{ project.id }}/root/key">download</a>
-                    <br/>
-                    <small><b>Sensitive information!</b></small>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-2">
-                    Export all
-                </div>
-                <div class="col-md-10">
-                    <a class="btn btn-outline-danger" href="{{ project.id }}/export">download</a>
-                    <br/>
-                    <small><b>Sensitive information!</b></small>
+                <div class="row">
+                    <div class="col-md-4">
+                        Export all
+                    </div>
+                    <div class="col-md-8">
+                        <a class="btn btn-outline-danger" href="{{ project.id }}/export">download</a>
+                        <br/>
+                        <small><b>Sensitive information!</b></small>
+                    </div>
                 </div>
             </div>
         {% endif %}
-    </div>
-    <br/>
-    {% if not project.ca_cert %}
-        <h2>Generate root CA</h2>
-        <form method="POST" action="{{ project.id }}/generate-root">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="catitle">Common name</label>
-                    <input id="catitle" class="form-control" type="text" name="cn" placeholder="Common name"
-                           value="{{ project.title | lower }}"/>
-                </div>
-                <div class="col-md-3">
-                    <label for="catitle">Valid days</label>
-                    <input id="cadays" class="form-control" type="number" name="days" placeholder="Days" value="365"/>
-                </div>
-                <div class="col-md">
-                    <label>&nbsp;</label><br/>
-                    <button type="submit" class="btn btn-outline-primary">generate</button>
-                </div>
-            </div>
-        </form>
+
         <br/>
-        <h2>Upload CA</h2>
-        Own CA can be uploaded.
-        <form method="POST" enctype="multipart/form-data" action="{{ project.id }}/upload-root">
-            <div class="row">
-                <div class="col-md-3">
-                    <label for="capk">Private key</label>
-                    <input id="capk" class="form-control" accept=".key" type="file" name="capk"
-                           placeholder="Private key"/>
+        {% if not project.ca_cert %}
+            <h2>Generate root CA</h2>
+            <form method="POST" action="{{ project.id }}/generate-root">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="catitle">Common name</label>
+                        <input id="catitle" class="form-control" type="text" name="cn" placeholder="Common name"
+                               value="{{ project.title | lower }}"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="catitle">Valid days</label>
+                        <input id="cadays" class="form-control" type="number" name="days" placeholder="Days"
+                               value="365"/>
+                    </div>
+                    <div class="col-md">
+                        <label>&nbsp;</label><br/>
+                        <button type="submit" class="btn btn-outline-primary">generate</button>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <label for="cacrt">Public cert</label>
-                    <input id="cacrt" class="form-control" accept=".crt" type="file" name="cacrt"
-                           placeholder="Public cert"/>
+            </form>
+            <br/>
+            <h2>Upload CA</h2>
+            Own CA can be uploaded.
+            <form method="POST" enctype="multipart/form-data" action="{{ project.id }}/upload-root">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label for="capk">Private key</label>
+                        <input id="capk" class="form-control" accept=".key" type="file" name="capk"
+                               placeholder="Private key"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cacrt">Public cert</label>
+                        <input id="cacrt" class="form-control" accept=".crt" type="file" name="cacrt"
+                               placeholder="Public cert"/>
+                    </div>
+                    <div class="col-md">
+                        <label>&nbsp;</label><br/>
+                        <button type="submit" class="btn btn-outline-primary">upload</button>
+                    </div>
                 </div>
-                <div class="col-md">
-                    <label>&nbsp;</label><br/>
-                    <button type="submit" class="btn btn-outline-primary">upload</button>
-                </div>
-            </div>
-        </form>
-    {% endif %}
+            </form>
+        {% endif %}
+    </div>
 {% endblock %}
