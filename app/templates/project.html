@@ -85,7 +85,7 @@
         <h2>Generate root CA</h2>
         <form method="POST" action="{{ project.id }}/generate-root">
             <div class="row">
-                <div class="col-md-7">
+                <div class="col-md-3">
                     <label for="catitle">Common name</label>
                     <input id="catitle" class="form-control" type="text" name="cn" placeholder="Common name"
                            value="{{ project.title | lower }}"/>
@@ -94,12 +94,32 @@
                     <label for="catitle">Valid days</label>
                     <input id="cadays" class="form-control" type="number" name="days" placeholder="Days" value="365"/>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md">
                     <label>&nbsp;</label><br/>
                     <button type="submit" class="btn btn-outline-primary">generate</button>
                 </div>
             </div>
         </form>
-
+        <br/>
+        <h2>Upload CA</h2>
+        Own CA can be uploaded.
+        <form method="POST" enctype="multipart/form-data" action="{{ project.id }}/upload-root">
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="capk">Private key</label>
+                    <input id="capk" class="form-control" accept=".key" type="file" name="capk"
+                           placeholder="Private key"/>
+                </div>
+                <div class="col-md-3">
+                    <label for="cacrt">Public cert</label>
+                    <input id="cacrt" class="form-control" accept=".crt" type="file" name="cacrt"
+                           placeholder="Public cert"/>
+                </div>
+                <div class="col-md">
+                    <label>&nbsp;</label><br/>
+                    <button type="submit" class="btn btn-outline-primary">upload</button>
+                </div>
+            </div>
+        </form>
     {% endif %}
 {% endblock %}

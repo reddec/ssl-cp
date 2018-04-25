@@ -49,6 +49,18 @@ def gen_root_ca(id: int):
     return redirect(url_for('get_project', id=project.id))
 
 
+@app.route('/project/<id>/upload-root', methods=['POST'])
+def upload_root_ca(id: int):
+    id = int(id)
+    project = models.Project.query.get(id)
+    private_key = request.files['capk'].read()
+    public_cert = request.files['cacrt'].read()
+    project.ca_cert = public_cert
+    project.ca_private = private_key
+    db.session.commit()
+    return redirect(url_for('get_project', id=project.id))
+
+
 @app.route('/project/<id>/generate-signed', methods=['POST'])
 def create_child_certificate(id: int):
     crt = models.create_child(int(id), request.form['cn'], int(request.form['days']))
@@ -66,6 +78,7 @@ def download_project_ca_cert(id: int):
     resp.headers['Content-Disposition'] = 'attachment; filename="ca-' + str(project.id) + ".crt"
     return resp
 
+
 @app.route('/project/<id>/root/key')
 def download_project_ca_key(id: int):
     id = int(id)
@@ -76,6 +89,7 @@ def download_project_ca_key(id: int):
     resp.headers['Content-Type'] = 'text/plain'
     resp.headers['Content-Disposition'] = 'attachment; filename="ca-' + str(project.id) + ".key"
     return resp
+
 
 @app.route('/project/<id>/revoked')
 def download_revoked_crl(id: int):

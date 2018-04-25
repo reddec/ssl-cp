@@ -61,3 +61,18 @@ def create_revoke_list(ca_cert: bytes, ca_key: bytes, serials: List[Tuple[int, d
     cert = crypto.load_certificate(crypto.FILETYPE_PEM, ca_cert)
     crl.sign(cert, key, digest.encode())
     return crypto.dump_crl(crypto.FILETYPE_PEM, crl)
+
+
+class Info:
+    def __init__(self, issued_at: datetime, valid_till: datetime, common_name: str):
+        self.issued_at = issued_at
+        self.valid_till = valid_till
+        self.common_name = common_name
+
+
+def read_public_info(cert: bytes) -> Info:
+    info = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
+
+    return Info(datetime.strptime(info.get_notBefore(), '%Y%m%d%H%M%SZ'),
+                datetime.strptime(info.get_notAfter(), '%Y%m%d%H%M%SZ'),
+                info.get_subject().cn)

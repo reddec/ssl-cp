@@ -24,8 +24,10 @@ Requirements: python3, virtual environment
 
 ## Web UI + API
 
-Yes, ssl-cp contains full-featured flask-based panel.
+Yes, ssl-cp contains full-featured **mobile friendly** flask-based panel.
 And automation friendly API!
+
+
 
 ## Multi-project
 
