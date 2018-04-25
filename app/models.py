@@ -12,6 +12,8 @@ class Project(db.Model):
     ca_private = deferred(db.Column(db.Binary))
     ca_cert = deferred(db.Column(db.Binary))
 
+    certificates = db.relationship('Certificate', back_populates='project', lazy=True)
+
 
 class Certificate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +25,7 @@ class Certificate(db.Model):
     common_name = db.Column(db.Text, nullable=False, unique=True)
     revoked_at = db.Column(db.DateTime)
 
-    project = db.relationship('Project', backref=db.backref('certificates', lazy=True))
+    project = db.relationship('Project', back_populates='certificates')
 
     @property
     def is_active(self):

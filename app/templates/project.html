@@ -33,6 +33,8 @@
                     <a class="btn btn-outline-success" href="{{ project.id }}/root/cert">download</a>
                     <br/>
                     <small>Public certificate</small>
+                    <br/>
+                    <a href="https://askubuntu.com/a/377570/170954">Read how to install CA certificate globally</a>
                 </div>
             </div>
             <div class="row">
@@ -48,10 +50,30 @@
             </div>
             <div class="row">
                 <div class="col-md-2">
+                    Export certificates
+                </div>
+                <div class="col-md-10">
+                    <a class="btn btn-outline-success" href="{{ project.id }}/export/certs">download</a>
+                    <br/>
+                    <small>Export CA and nodes certificates with CRL list</small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
                     CA private key
                 </div>
                 <div class="col-md-10">
                     <a class="btn btn-danger" href="{{ project.id }}/root/key">download</a>
+                    <br/>
+                    <small><b>Sensitive information!</b></small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    Export all
+                </div>
+                <div class="col-md-10">
+                    <a class="btn btn-outline-danger" href="{{ project.id }}/export">download</a>
                     <br/>
                     <small><b>Sensitive information!</b></small>
                 </div>

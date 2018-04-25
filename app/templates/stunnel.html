@@ -11,63 +11,313 @@
     </div>
 {% endblock %}
 {% block body %}
-    <div class="details">
-        <h2>Stunnel</h2>
-        <div>
-            <ul>
-                <li>unpack archive</li>
-                <li>change dir to unpacked config</li>
-                <li><code>sudo bash ./install.sh </code></li>
-            </ul>
+    <div class="row">
+        <div class="col-xl-6 col-lg-5 col-md-12">
+            <h2>Stunnel</h2>
+            <p>
+                <a href="https://www.stunnel.org/">stunnel</a> is an open-source multi-platform application used to
+                provide
+                universal TLS/SSL tunneling service.
+            </p>
+            <p>
+                <a href="https://www.stunnel.org/">stunnel</a> can be used to provide secure encrypted connections for
+                clients or servers that do not speak TLS or
+                SSL natively. It runs on a variety of operating systems, including most Unix-like operating
+                systems
+                and Windows. stunnel relies on the OpenSSL library to implement the underlying TLS or SSL protocol.
+            </p>
+            <p>
+                <a href="https://www.stunnel.org/">stunnel</a> uses public-key cryptography with X.509 digital
+                certificates
+                to secure the SSL connection. Clients
+                can optionally be authenticated via a certificate too
+            </p>
+            <small><a href="https://en.wikipedia.org/wiki/Stunnel">© Wikipedia</a></small>
         </div>
-        <div class="row">
-            <div class="col-md-2">
-                Server
+        <div class="col-xl-6 col-lg-7 col-md-12">
+            <h2>Simple architecture</h2>
+            <div style="overflow-x: auto">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="471px"
+                     height="181px"
+                     version="1.1"
+                     content="<mxfile userAgent=&quot;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/65.0.3325.181 Chrome/65.0.3325.181 Safari/537.36&quot; version=&quot;8.5.12&quot; editor=&quot;www.draw.io&quot; type=&quot;device&quot;><diagram id=&quot;1e9428cb-6759-4c7f-d5e6-8b3fc249bbe1&quot; name=&quot;Page-1&quot;>5VjJbtswEP0aA+2lsERbjo6x47SHNCjgFk2OjERLbGiOQNGL+vUdWtRm2kWCGE6h6qLh43CZ9zhDQQMyW+0+K5qlXyFmYuAP492A3Ax83xv5Ab4MUpTIJBiWQKJ4bJ0aYMF/MwtWbmses7zjqAGE5lkXjEBKFukORpWCbddtCaK7akYT5gCLiAoX/cljnVrUC8Km4wvjSWqXvvInZccTjZ4TBWtp1xv4ZLl/yu4VreaygeYpjWHbgsh8QGYKQJfWajdjwnBb0VaOuz3RW+9bMalfMuCqHLChYm1DXyzuEGAyUkWmWWy3qYuKGhYjU7YpQeJruo+XmRmH2Er1SqDpocl2XD+07Efj8mlsWlKr4qHbfLSeuaZKXxsVEYgEzXMeVfAtF/XkMnadEGy5/GJaF/Z00bUGhEDpFBKQVNwBZPWKCp5rpQ2yBKntQA9FmZY0mNhPEm2hHNYqsl6+PbpUJazyIrXKmD0MVgwjRx/FBNV8052e2mOc1H6NlGhYNY8rGzrKfhOUy7PoaUWzivZLM89zRZtcSDPfzcbvP+7v55iRgcC9TJ8UWomxPkSCYxgf3R5H4a6c25RrtsjoPt4tlu+uxHVBMr6J0aiyFY3NijMQoJqzckg6FTyRRl50ZarezoYpzXZ/18El2A4Y2WJZdJvbVmWu6mnaKsrVnfMWRcYXzaJTVXHYqwwjR6qif6EMI6/IsJwpPLb/RYaR8P1SbORIcp1lgkcoPLiJ1lDt9YNqL3wh1+QMXE8crmcg8/UKg+sd0aN35Ln6iGgRLXiumeQyMUFgve1fEQkOCB+6hF8d4bsqAG/i2/1y6j/fI++A8CC4HOHuRfoPkqxAl7cIuQmHZyrf41GH9HHocD4+xrn/as6x2fwH2Pe1fraQ+R8=</diagram></mxfile>">
+                    <defs></defs>
+                    <g transform="translate(0.5,0.5)">
+                        <path d="M 126.37 30 L 321.63 30" fill="none" stroke="#000000" stroke-miterlimit="10"
+                              pointer-events="none"></path>
+                        <path d="M 121.12 30 L 128.12 26.5 L 126.37 30 L 128.12 33.5 Z" fill="#000000" stroke="#000000"
+                              stroke-miterlimit="10" pointer-events="none"></path>
+                        <path d="M 326.88 30 L 319.88 33.5 L 321.63 30 L 319.88 26.5 Z" fill="#000000" stroke="#000000"
+                              stroke-miterlimit="10" pointer-events="none"></path>
+                        <g transform="translate(184.5,23.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="79" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;background-color:#ffffff;">
+                                            SSL encrypted
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="40" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">SSL
+                                    encrypted
+                                </text>
+                            </switch>
+                        </g>
+                        <path d="M 60 90.37 L 60 143.63" fill="none" stroke="#000000" stroke-miterlimit="10"
+                              pointer-events="none"></path>
+                        <path d="M 60 85.12 L 63.5 92.12 L 60 90.37 L 56.5 92.12 Z" fill="#000000" stroke="#000000"
+                              stroke-miterlimit="10" pointer-events="none"></path>
+                        <path d="M 60 148.88 L 56.5 141.88 L 60 143.63 L 63.5 141.88 Z" fill="#000000" stroke="#000000"
+                              stroke-miterlimit="10" pointer-events="none"></path>
+                        <g transform="translate(46.5,110.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="27" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;background-color:#ffffff;">
+                                            Plain
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="14" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    Plain
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="0" y="0" width="120" height="60" fill="#ffffff" stroke="#000000"
+                              pointer-events="none"></rect>
+                        <g transform="translate(31.5,16.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="56" height="26"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 58px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            STUNNEL<br>(client)<br>
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="28" y="19" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    STUNNEL&lt;br&gt;(client)&lt;br&gt;
+                                </text>
+                            </switch>
+                        </g>
+                        <path d="M 410 66.37 L 410 119.63" fill="none" stroke="#000000" stroke-miterlimit="10"
+                              pointer-events="none"></path>
+                        <path d="M 410 61.12 L 413.5 68.12 L 410 66.37 L 406.5 68.12 Z" fill="#000000" stroke="#000000"
+                              stroke-miterlimit="10" pointer-events="none"></path>
+                        <path d="M 410 124.88 L 406.5 117.88 L 410 119.63 L 413.5 117.88 Z" fill="#000000"
+                              stroke="#000000"
+                              stroke-miterlimit="10" pointer-events="none"></path>
+                        <g transform="translate(396.5,86.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="27" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; white-space: nowrap; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;background-color:#ffffff;">
+                                            Plain
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="14" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    Plain
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="350" y="0" width="120" height="60" fill="#ffffff" stroke="#000000"
+                              pointer-events="none"></rect>
+                        <g transform="translate(381.5,16.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="56" height="26"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 58px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            STUNNEL<br>(server)<br>
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="28" y="19" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    STUNNEL&lt;br&gt;(server)&lt;br&gt;
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="350" y="150" width="120" height="30" rx="4.5" ry="4.5" fill="#ffffff" stroke="#000000"
+                              pointer-events="none"></rect>
+                        <g transform="translate(380.5,158.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="58" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 60px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            Application
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="29" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    Application
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="0" y="150" width="120" height="30" rx="4.5" ry="4.5" fill="#ffffff" stroke="#000000"
+                              pointer-events="none"></rect>
+                        <g transform="translate(31.5,158.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="56" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 56px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            Consumer
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="28" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    Consumer
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="20" y="60" width="80" height="24" fill="#ffffff" stroke="#000000"
+                              pointer-events="none"></rect>
+                        <g transform="translate(25.5,65.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="68" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 70px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            listening port
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="34" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    listening port
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="370" y="126" width="80" height="24" fill="#ffffff" stroke="#000000"
+                              pointer-events="none"></rect>
+                        <g transform="translate(375.5,131.5)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="68" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 70px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            listening port
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="34" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    listening port
+                                </text>
+                            </switch>
+                        </g>
+                        <rect x="314" y="19" width="50" height="22" fill="#ffffff" stroke="#000000"
+                              transform="rotate(90,339,30)"
+                              pointer-events="none"></rect>
+                        <g transform="translate(328.5,23.5)rotate(90,10,6)">
+                            <switch>
+                                <foreignObject style="overflow:visible;" pointer-events="all" width="20" height="12"
+                                               requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility">
+                                    <div xmlns="http://www.w3.org/1999/xhtml"
+                                         style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; vertical-align: top; width: 22px; white-space: nowrap; word-wrap: normal; text-align: center;">
+                                        <div xmlns="http://www.w3.org/1999/xhtml"
+                                             style="display:inline-block;text-align:inherit;text-decoration:inherit;">
+                                            port
+                                        </div>
+                                    </div>
+                                </foreignObject>
+                                <text x="10" y="12" fill="#000000" text-anchor="middle" font-size="12px"
+                                      font-family="Helvetica">
+                                    port
+                                </text>
+                            </switch>
+                        </g>
+                    </g>
+                </svg>
             </div>
-            <div class="col-md-10">
-                <form action="../../cookbook/stunnel/{{ cert.id }}/server" method="GET">
-                    <div class="form-group">
-                        <label for="stsrvconn">Connect to port or address</label>
-                        <input id="stsrvconn" value="8080" type="text" class="form-control" name="connect"
-                               placeholder="port or address to connect">
-                        <small class="form-text text-muted">Internal port or address to where stunnel will connect
-                        </small>
-                    </div>
-                    <div class="form-group">
-                        <label for="stsrvacc">Listening port or address</label>
-                        <input id="stsrvacc" value="8443" type="text" class="form-control" name="accept"
-                               placeholder="port or address to listen">
-                        <small class="form-text text-muted">Public port or address which stunnel will listen and accept
-                        </small>
-                    </div>
-                    <button type="submit" class="btn btn-outline-success">Download server</button>
-                </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Client</h2>
+            <form action="../../cookbook/stunnel/{{ cert.id }}/client" method="GET">
+                <div class="form-group">
+                    <label for="stsrvconn">Address of remote server inside public network</label>
+                    <input id="stsrvconn" value="{{ cert.common_name }}:8443" type="text" class="form-control"
+                           name="connect"
+                           placeholder="example.com:8443">
+                    <small class="form-text text-muted">Remote port or address to where stunnel will connect</small>
+                </div>
+                <div class="form-group">
+                    <label for="stsrvacc">Local port for incoming connections inside trusted network</label>
+                    <input id="stsrvacc" value="8080" type="text" class="form-control" name="accept"
+                           placeholder="port or address to listen">
+                    <small class="form-text text-muted">Internal port or address which stunnel will listen and
+                        accept
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-outline-success">Download client</button>
+            </form>
 
-            </div>
         </div>
-        <div class="row">
-            <div class="col-md-2">
-                Client
-            </div>
-            <div class="col-md-10">
-                <form action="../../cookbook/stunnel/{{ cert.id }}/client" method="GET">
-                    <div class="form-group">
-                        <label for="stsrvconn">Connect to address</label>
-                        <input id="stsrvconn" value="" type="text" class="form-control" name="connect"
-                               placeholder="example.com:8443">
-                        <small class="form-text text-muted">Remote port or address to where stunnel will connect</small>
-                    </div>
-                    <div class="form-group">
-                        <label for="stsrvacc">Listening port or address</label>
-                        <input id="stsrvacc" value="8080" type="text" class="form-control" name="accept"
-                               placeholder="port or address to listen">
-                        <small class="form-text text-muted">Internal port or address which stunnel will listen and
-                            accept
-                        </small>
-                    </div>
-                    <button type="submit" class="btn btn-outline-success">Download client</button>
-                </form>
 
+        <div class="col-md-4">
+            <h2>Server</h2>
+            <form action="../../cookbook/stunnel/{{ cert.id }}/server" method="GET">
+                <div class="form-group">
+                    <label for="stsrvacc">Port for incoming connection inside public network</label>
+                    <input id="stsrvacc" value="8443" type="text" class="form-control" name="accept"
+                           placeholder="port or address to listen">
+                    <small class="form-text text-muted">Public port or address which stunnel will listen and accept
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="stsrvconn">Application address inside trusted network</label>
+                    <input id="stsrvconn" value="127.0.0.1:8080" type="text" class="form-control" name="connect"
+                           placeholder="port or address to connect">
+                    <small class="form-text text-muted">Internal port or address to where stunnel will connect
+                    </small>
+                </div>
+
+                <button type="submit" class="btn btn-outline-success">Download server</button>
+            </form>
+
+        </div>
+
+        <div class="col-md">
+            <h2>How to use archives</h2>
+            <div>
+                <ul>
+                    <li>unpack archive</li>
+                    <li>change dir to unpacked config</li>
+                    <li><code>sudo bash ./install.sh </code></li>
+                </ul>
             </div>
         </div>
+    </div>
 {% endblock %}

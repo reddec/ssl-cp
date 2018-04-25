@@ -1,4 +1,5 @@
 from app import app, db, models, certs_tools
+from app.utils.archive import add_to_archive
 from flask import make_response, request
 from jinja2 import Environment, FileSystemLoader
 import tarfile, io
@@ -6,7 +7,7 @@ import os
 
 
 def render(*asset_path, **kwargs):
-    env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), "assets")))
+    env = Environment(loader=FileSystemLoader(os.path.join(os.path.dirname(__file__), '..', "assets")))
     templ = env.get_template(os.path.join(*asset_path))
     return templ.render(**kwargs).encode()
 
@@ -75,10 +76,3 @@ def stunnel_client(cert_id: int):
     resp.headers['Content-Disposition'] = 'attachment; filename="' + str(
         cert.id) + "-" + cert.common_name + "-client.tar.gz"
     return resp
-
-
-def add_to_archive(tar: tarfile.TarFile, buf: bytes, name: str):
-    info = tarfile.TarInfo(name)
-    info.size = len(buf)
-    info.type = tarfile.REGTYPE
-    tar.addfile(info, io.BytesIO(buf))

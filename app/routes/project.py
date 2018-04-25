@@ -1,5 +1,9 @@
+from typing import List
+
 from app import app, models, db, certs_tools
 from flask import request, url_for, render_template, redirect, abort, make_response
+
+from app.utils.archive import dict_to_archive
 
 
 @app.route('/')
@@ -62,6 +66,16 @@ def download_project_ca_cert(id: int):
     resp.headers['Content-Disposition'] = 'attachment; filename="ca-' + str(project.id) + ".crt"
     return resp
 
+@app.route('/project/<id>/root/key')
+def download_project_ca_key(id: int):
+    id = int(id)
+    project = models.Project.query.get(id)
+    if project.ca_private is None:
+        return abort(404)
+    resp = make_response(project.ca_private)
+    resp.headers['Content-Type'] = 'text/plain'
+    resp.headers['Content-Disposition'] = 'attachment; filename="ca-' + str(project.id) + ".key"
+    return resp
 
 @app.route('/project/<id>/revoked')
 def download_revoked_crl(id: int):
@@ -73,6 +87,72 @@ def download_revoked_crl(id: int):
     resp = make_response(content)
     resp.headers['Content-Type'] = 'text/plain'
     resp.headers['Content-Disposition'] = 'attachment; filename="revoked-' + str(id) + ".crl"
+    return resp
+
+
+@app.route('/project/<project_id>/export')
+def export_project(project_id: int):
+    """
+    Export project for usage in others systems. Not for backup.
+
+    Generates archive with name [id]-[common name].tar.gz, that contains:
+    ca.cert, ca.key, crl.pem, nodes/[id]-[common name].{cert,key}
+
+    :param project_id: identity of project
+    """
+    project_id = int(project_id)
+    proj = models.Project.query.get(int(project_id))  # type: models.Project
+    revoked = models.Certificate.revoked(project_id)
+    crl_file = certs_tools.create_revoke_list(proj.ca_cert, proj.ca_private,
+                                              [(cert.id, cert.revoked_at) for cert in revoked])
+
+    files = {
+        "ca.cert": proj.ca_cert,
+        "ca.key": proj.ca_private,
+        "crl.pem": crl_file,
+    }
+
+    certs = proj.certificates  # type: List[models.Certificate]
+    for cert in certs:
+        file_name = "nodes/{id}-{cn}".format(id=cert.id, cn=cert.common_name)
+        files[file_name + ".cert"] = cert.public_cert
+        files[file_name + ".key"] = cert.private_key
+
+    resp = make_response(dict_to_archive(files))
+    resp.headers['Content-Type'] = 'application/gzip'
+    resp.headers['Content-Disposition'] = 'attachment; filename="{id}-{cn}.tar.gz"'.format(id=proj.id, cn=proj.title)
+    return resp
+
+
+@app.route('/project/<project_id>/export/certs')
+def export_project_certs(project_id: int):
+    """
+    Export project CA and nodes certificates with CRL list without sensitive information
+
+    Generates archive with name [id]-[common name].tar.gz, that contains:
+    ca.cert, crl.pem, nodes/[id]-[common name].cert
+
+    :param project_id: identity of project
+    """
+    project_id = int(project_id)
+    proj = models.Project.query.get(int(project_id))  # type: models.Project
+    revoked = models.Certificate.revoked(project_id)
+    crl_file = certs_tools.create_revoke_list(proj.ca_cert, proj.ca_private,
+                                              [(cert.id, cert.revoked_at) for cert in revoked])
+
+    files = {
+        "ca.cert": proj.ca_cert,
+        "crl.pem": crl_file,
+    }
+
+    certs = proj.certificates  # type: List[models.Certificate]
+    for cert in certs:
+        file_name = "nodes/{id}-{cn}".format(id=cert.id, cn=cert.common_name)
+        files[file_name + ".cert"] = cert.public_cert
+
+    resp = make_response(dict_to_archive(files))
+    resp.headers['Content-Type'] = 'application/gzip'
+    resp.headers['Content-Disposition'] = 'attachment; filename="{id}-{cn}.tar.gz"'.format(id=proj.id, cn=proj.title)
     return resp
 
 
