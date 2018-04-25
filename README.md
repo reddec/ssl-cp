@@ -65,3 +65,7 @@ View and manage each certificate:
 Panel can prepare full-featured archive (including SystemD service file and install script) for **client** and **server** configuration of stunnel
 
 ![screencapture-127-0-0-1-5000-certificate-2-stunnel-2018-04-17-21_38_16](https://user-images.githubusercontent.com/6597086/38889526-a8538228-4287-11e8-82d2-3f34f9e1adf0.png)
+
+# Nginx
+
+Basic and with client certificate authorization
