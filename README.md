@@ -22,6 +22,10 @@ Requirements: python3, virtual environment
 
 # Features
 
+* PEM + PFX export
+* 4096 key size
+* SHA-256
+
 ## Web UI + API
 
 Yes, ssl-cp contains full-featured **mobile friendly** flask-based panel.

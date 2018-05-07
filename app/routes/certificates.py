@@ -1,4 +1,4 @@
-from app import app, models, db
+from app import app, models, db, certs_tools
 from app.utils.archive import dict_to_archive
 from flask import render_template, make_response, request, redirect, url_for
 from datetime import datetime
@@ -39,7 +39,8 @@ def export_certificate_with_assets(id: int):
     archive = dict_to_archive({
         cert.common_name + '/' + 'node.crt': cert.public_cert,
         cert.common_name + '/' + 'node.key': cert.private_key,
-        cert.common_name + '/' + 'ca.crt': cert.project.ca_cert
+        cert.common_name + '/' + 'ca.crt': cert.project.ca_cert,
+        cert.common_name + '/' + 'node.pfx': certs_tools.make_pfx(cert.public_cert, cert.private_key)
     })
 
     resp = make_response(archive)

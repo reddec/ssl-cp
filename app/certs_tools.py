@@ -4,11 +4,12 @@ from datetime import datetime, timedelta
 from OpenSSL import crypto, SSL
 
 digest = 'sha256'
+key_size = 4096
 
 
 def create_ca(common_name: str, days: int) -> (bytes, bytes):
     pair = crypto.PKey()
-    pair.generate_key(crypto.TYPE_RSA, 2048)
+    pair.generate_key(crypto.TYPE_RSA, key_size)
 
     cert = crypto.X509()
     cert.get_subject().CN = common_name
@@ -23,7 +24,7 @@ def create_ca(common_name: str, days: int) -> (bytes, bytes):
 
 def create_cert(cn: str, days: int, ca_private: bytes, ca_cert: bytes, sn: int) -> (bytes, bytes):
     pkey = crypto.PKey()
-    pkey.generate_key(crypto.TYPE_RSA, 2048)
+    pkey.generate_key(crypto.TYPE_RSA, key_size)
 
     req = crypto.X509Req()
     req.get_subject().CN = cn
@@ -61,6 +62,15 @@ def create_revoke_list(ca_cert: bytes, ca_key: bytes, serials: List[Tuple[int, d
     cert = crypto.load_certificate(crypto.FILETYPE_PEM, ca_cert)
     crl.sign(cert, key, digest.encode())
     return crypto.dump_crl(crypto.FILETYPE_PEM, crl)
+
+
+def make_pfx(cert: bytes, key: bytes) -> bytes:
+    crt = crypto.load_certificate(crypto.FILETYPE_PEM, cert)
+    priv = crypto.load_privatekey(crypto.FILETYPE_PEM, key)
+    pfx = crypto.PKCS12Type()
+    pfx.set_privatekey(priv)
+    pfx.set_certificate(crt)
+    return pfx.export('')
 
 
 class Info:

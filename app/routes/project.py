@@ -124,6 +124,7 @@ def export_project(project_id: int):
         "ca.cert": proj.ca_cert,
         "ca.key": proj.ca_private,
         "crl.pem": crl_file,
+        "ca.pfx": certs_tools.make_pfx(proj.ca_cert, proj.ca_private)
     }
 
     certs = proj.certificates  # type: List[models.Certificate]
