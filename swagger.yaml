@@ -1,0 +1,340 @@
+swagger: "2.0"
+info:
+  description: "SSL-CP API"
+  version: "1.0.0"
+  title: "SSL-CP"
+  license:
+    name: "GPL-3.0"
+basePath: "/api"
+paths:
+  "/status":
+    get:
+      operationId: getStatus
+      description:
+        Get general status
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Status"
+  "/certificates":
+    get:
+      operationId: listRootCertificates
+      description:
+        List root certificates (without issuers). Equal to /certificates/0/issued
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Certificate"
+    post:
+      operationId: createCertificate
+      description: |
+        Create root (issuer id 0) or child certificate.
+        Child certificate can be issued only if issuer referred to CA cert.
+        Root certificates always CA (ca flag ignored).
+      parameters:
+        - in: body
+          name: subject
+          schema:
+            $ref: '#/definitions/Subject'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Certificate"
+
+    put:
+      operationId: batchCreateCertificate
+      description: |
+        Create multiple certificates
+      parameters:
+        - in: body
+          name: batch
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Batch'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Certificate"
+  "/certificates/expired":
+    get:
+      operationId: listExpiredCertificates
+      description:
+        List expired certificates
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Certificate"
+  "/certificates/soon-expire":
+    get:
+      operationId: listSoonExpireCertificates
+      description:
+        List certificates wich will soon expire (within 30 days by default)
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Certificate"
+  "/certificate/{certificate_id}":
+    get:
+      operationId: getCertificate
+      description: |
+        Get issued certificate
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Certificate"
+    put:
+      operationId: renewCertificate
+      description: |
+        Re-create certificate with same parameters but with different expiration.
+        In case of CA it will cause cascade renewal.
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+        - in: body
+          name: renewal
+          schema:
+            $ref: '#/definitions/Renewal'
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Certificate"
+    delete:
+      operationId: revokeCertificate
+      description: |
+        Revoke issued certificate
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        204:
+          description: OK
+
+  "/certificate/{certificate_id}/cert":
+    get:
+      operationId: getPublicCert
+      description: |
+        Get certificate public part
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+
+  "/certificate/{certificate_id}/key":
+    get:
+      operationId: getPrivateKey
+      description: |
+        Get certificate private part
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+
+  "/certificate/{certificate_id}/issued":
+    get:
+      operationId: listCertificates
+      description: |
+        Get issued child certificates.
+        Applicable only for CA certificates.
+        Special ID=0 means root certificates
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Certificate"
+
+  "/certificate/{certificate_id}/revoked":
+    get:
+      operationId: listRevokedCertificates
+      description: |
+        List certificates revoked for the certificate. Make senses only for CA.
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Certificate"
+  "/certificate/{certificate_id}/revoked/crl":
+    get:
+      operationId: getRevokedCertificatesList
+      description: |
+        Get Certificate Revoked List. Make senses only for CA.
+      parameters:
+        - in: path
+          name: certificate_id
+          required: true
+          type: integer
+          minimum: 0
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+definitions:
+  Renewal:
+    type: object
+    properties:
+      days:
+        type: integer
+        minimum: 0
+      domains:
+        type: array
+        items:
+          type: string
+      units:
+        description: Organization units
+        type: array
+        items:
+          type: string
+  Subject:
+    type: object
+    properties:
+      name:
+        type: string
+      issuer:
+        description: Parent CA certificate ID
+        type: integer
+        minimum: 0
+      days:
+        type: integer
+        minimum: 0
+      ca:
+        type: boolean
+      domains:
+        description: SAN for the certificate. If not defined - name will be used
+        type: array
+        items:
+          type: string
+      units:
+        description: Organization units
+        type: array
+        items:
+          type: string
+  Certificate:
+    type: object
+    properties:
+      id:
+        type: integer
+        minimum: 0
+        description: Global unique ID that will not change after renewal
+      serial:
+        type: string
+      issuer:
+        type: integer
+        minimum: 0
+      ca:
+        type: boolean
+      name:
+        type: string
+      domains:
+        type: array
+        items:
+          type: string
+      created_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+      expire_at:
+        type: string
+        format: date-time
+      revoked_at:
+        type: string
+        format: date-time
+      units:
+        description: Organization units
+        type: array
+        items:
+          type: string
+  Batch:
+    type: object
+    properties:
+      certificate:
+        $ref: '#/definitions/Subject'
+      nested:
+        description: |
+          Child certificates (issuer ID will be ignored). If nested not null or issuer is 0, then CA=true will be forced.
+        type: array
+        items:
+          $ref: '#/definitions/Batch'
+  Status:
+    type: object
+    properties:
+      total:
+        description: Total number of issued certificates
+        type: integer
+        minimum: 0
+      expired:
+        description: Total number of expired certificates
+        type: integer
+        minimum: 0
+      soon_expire:
+        description: Total number of certificates that will soon expire (within 30 days)
+        type: integer
+        minimum: 0
+      ca:
+        description: Total number of central authorities
+        type: integer
+        minimum: 0
+      revoked:
+        description: Total number of revoke certificates
+        type: integer
+        minimum: 0

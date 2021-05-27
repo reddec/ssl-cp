@@ -1,0 +1,55 @@
+---
+certificate:
+  name: expired.example.com
+  days: 0
+---
+certificate:
+  name: root1.example.com
+  days: 29
+nested:
+  - certificate:
+      name: child1
+      domains:
+        - child1-a.example.com
+        - child1-b.example.com
+      days: 365
+  - certificate:
+      name: child2
+      days: 365
+      ca: yes
+    nested:
+      - certificate:
+          name: nested-child1
+          days: 362
+      - certificate:
+          name: nested-child2
+          days: 128
+---
+certificate:
+  name: root2.example.com
+  days: 365
+nested:
+  - certificate:
+      name: ca
+      days: 0
+      ca: yes
+  - certificate:
+      name: child1
+      domains:
+        - child1-a.example.com
+        - child1-b.example.com
+      days: 365
+  - certificate:
+      name: child2
+      days: 365
+      ca: yes
+    nested:
+      - certificate:
+          name: nested-child1
+          days: 362
+      - certificate:
+          name: nested-child2
+          days: 128
+      - certificate:
+          name: nested-child3
+          days: 0
