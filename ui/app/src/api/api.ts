@@ -84,6 +84,12 @@ export interface Certificate {
     domains?: Array<string>;
     /**
      * 
+     * @type {Array<string>}
+     * @memberof Certificate
+     */
+    ips?: Array<string>;
+    /**
+     * 
      * @type {string}
      * @memberof Certificate
      */
@@ -131,6 +137,12 @@ export interface Renewal {
      * @memberof Renewal
      */
     domains?: Array<string>;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof Renewal
+     */
+    ips?: Array<string>;
     /**
      * Organization units
      * @type {Array<string>}
@@ -206,11 +218,17 @@ export interface Subject {
      */
     ca?: boolean;
     /**
-     * SAN for the certificate. If not defined - name will be used
+     * DNS SAN for the certificate. If not defined - name will be used
      * @type {Array<string>}
      * @memberof Subject
      */
     domains?: Array<string>;
+    /**
+     * IP SAN for the certificate
+     * @type {Array<string>}
+     * @memberof Subject
+     */
+    ips?: Array<string>;
     /**
      * Organization units
      * @type {Array<string>}

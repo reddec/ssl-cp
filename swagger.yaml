@@ -238,6 +238,10 @@ definitions:
         type: array
         items:
           type: string
+      ips:
+        type: array
+        items:
+          type: string
       units:
         description: Organization units
         type: array
@@ -258,7 +262,12 @@ definitions:
       ca:
         type: boolean
       domains:
-        description: SAN for the certificate. If not defined - name will be used
+        description: DNS SAN for the certificate. If not defined - name will be used
+        type: array
+        items:
+          type: string
+      ips:
+        description: IP SAN for the certificate
         type: array
         items:
           type: string
@@ -284,6 +293,10 @@ definitions:
       name:
         type: string
       domains:
+        type: array
+        items:
+          type: string
+      ips:
         type: array
         items:
           type: string

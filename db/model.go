@@ -19,6 +19,7 @@ type Certificate struct {
 	Cert        string
 	Domains     []Domain
 	Units       []Unit
+	Addresses   []Address
 }
 
 func (crt *Certificate) RefID() *uint {
@@ -43,4 +44,9 @@ type Domain struct {
 type Unit struct {
 	CertificateID uint   `gorm:"primaryKey"`
 	Name          string `gorm:"primaryKey"`
+}
+
+type Address struct {
+	CertificateID uint   `gorm:"primaryKey"`
+	IP            string `gorm:"primaryKey"`
 }

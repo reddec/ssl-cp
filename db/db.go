@@ -12,7 +12,7 @@ func New(dialector gorm.Dialector) (*gorm.DB, error) {
 		return nil, fmt.Errorf("initialize database: %w", err)
 	}
 
-	err = db.AutoMigrate(&Certificate{}, &Domain{}, &Unit{})
+	err = db.AutoMigrate(&Certificate{}, &Domain{}, &Unit{}, &Address{})
 	if err != nil {
 		return nil, fmt.Errorf("apply migrations: %w", err)
 	}

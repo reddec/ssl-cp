@@ -16,6 +16,7 @@ import (
 	"log"
 	"math"
 	"math/big"
+	"strings"
 	"time"
 
 	"github.com/reddec/ssl-cp/api"
@@ -218,14 +219,15 @@ func (srv *Service) CreateCertificate(ctx context.Context, subject api.Subject) 
 		}
 
 		for _, domain := range subject.Domains {
-			dbCA.Domains = append(dbCA.Domains, db.Domain{Name: domain})
+			dbCA.Domains = append(dbCA.Domains, db.Domain{Name: strings.TrimSpace(domain)})
+		}
+
+		for _, ip := range subject.Ips {
+			dbCA.Addresses = append(dbCA.Addresses, db.Address{IP: strings.TrimSpace(ip)})
 		}
 
 		for _, field := range subject.Units {
-			dbCA.Units = append(dbCA.Units, db.Unit{
-				Name:          field,
-				CertificateID: dbCA.ID,
-			})
+			dbCA.Units = append(dbCA.Units, db.Unit{Name: field})
 		}
 
 		if err := tx.Save(&dbCA).Error; err != nil {
@@ -265,7 +267,7 @@ func (srv *Service) ListRootCertificates(ctx context.Context) ([]api.Certificate
 
 func (srv *Service) GetCertificate(ctx context.Context, certificateId uint) (api.Certificate, error) {
 	var ca db.Certificate
-	err := srv.db.WithContext(ctx).Model(&db.Certificate{}).Preload("Units").Preload("Domains").Take(&ca, certificateId).Error
+	err := srv.db.WithContext(ctx).Model(&db.Certificate{}).Preload("Units").Preload("Addresses").Preload("Domains").Take(&ca, certificateId).Error
 	if err != nil {
 		return api.Certificate{}, fmt.Errorf("get certificate %d: %w", certificateId, err)
 	}
@@ -302,7 +304,7 @@ func (srv *Service) ListCertificates(ctx context.Context, certificateId uint) ([
 	} else {
 		req = req.Where("issuer_id = ?", certificateId)
 	}
-	err := req.Preload("Units").Preload("Domains").Find(&nodes).Error
+	err := req.Preload("Units").Preload("Addresses").Preload("Domains").Find(&nodes).Error
 	if err != nil {
 		return nil, fmt.Errorf("list certificates: %w", err)
 	}
@@ -315,7 +317,7 @@ func (srv *Service) ListCertificates(ctx context.Context, certificateId uint) ([
 
 func (srv *Service) RenewCertificate(ctx context.Context, certificateId uint, renewal api.Renewal) (api.Certificate, error) {
 	var old db.Certificate
-	err := srv.db.WithContext(ctx).Preload("Units").Preload("Domains").Preload("Issued").Model(&old).Take(&old, certificateId).Error
+	err := srv.db.WithContext(ctx).Preload("Units").Preload("Addresses").Preload("Domains").Preload("Issued").Model(&old).Take(&old, certificateId).Error
 	if err != nil {
 		return api.Certificate{}, fmt.Errorf("find certificate: %w", err)
 	}
@@ -327,6 +329,7 @@ func (srv *Service) RenewCertificate(ctx context.Context, certificateId uint, re
 		Ca:      old.CA,
 		Domains: renewal.Domains,
 		Units:   renewal.Units,
+		Ips:     renewal.Ips,
 	}, old.ID)
 	if err != nil {
 		return api.Certificate{}, fmt.Errorf("regenerate certificate: %w", err)
@@ -348,6 +351,14 @@ func (srv *Service) RenewCertificate(ctx context.Context, certificateId uint, re
 		})
 	}
 
+	var dbIPs = make([]db.Address, 0, len(cert.Addresses))
+	for _, f := range cert.Addresses {
+		dbIPs = append(dbIPs, db.Address{
+			CertificateID: old.ID,
+			IP:            f.String(),
+		})
+	}
+
 	err = srv.db.Transaction(func(tx *gorm.DB) error {
 		err := tx.WithContext(ctx).Model(&db.Domain{}).Where("certificate_id = ?", old.ID).Delete(db.Domain{}).Error
 		if err != nil {
@@ -357,6 +368,11 @@ func (srv *Service) RenewCertificate(ctx context.Context, certificateId uint, re
 		err = tx.WithContext(ctx).Model(&db.Unit{}).Where("certificate_id = ?", old.ID).Delete(db.Unit{}).Error
 		if err != nil {
 			return fmt.Errorf("remove old fields: %w", err)
+		}
+
+		err = tx.WithContext(ctx).Model(&db.Address{}).Where("certificate_id = ?", old.ID).Delete(db.Address{}).Error
+		if err != nil {
+			return fmt.Errorf("remove old IP: %w", err)
 		}
 
 		err = tx.WithContext(ctx).Model(&db.Domain{}).Create(dbDomains).Error
@@ -370,6 +386,13 @@ func (srv *Service) RenewCertificate(ctx context.Context, certificateId uint, re
 				return fmt.Errorf("create new units: %w", err)
 			}
 		}
+
+		if len(dbIPs) > 0 {
+			err = tx.WithContext(ctx).Model(&db.Address{}).Create(dbIPs).Error
+			if err != nil {
+				return fmt.Errorf("create new IP: %w", err)
+			}
+		}
 		err = tx.WithContext(ctx).Model(&db.Certificate{}).
 			Where("id = ?", certificateId).
 			Updates(&db.Certificate{
@@ -380,7 +403,7 @@ func (srv *Service) RenewCertificate(ctx context.Context, certificateId uint, re
 		if err != nil {
 			return fmt.Errorf("update cert: %w", err)
 		}
-		err = tx.WithContext(ctx).Model(&db.Certificate{}).Preload("Units").Preload("Domains").Take(&old, certificateId).Error
+		err = tx.WithContext(ctx).Model(&db.Certificate{}).Preload("Units").Preload("Addresses").Preload("Domains").Take(&old, certificateId).Error
 		if err != nil {
 			return fmt.Errorf("get cert: %w", err)
 		}
@@ -409,6 +432,7 @@ func (srv *Service) ListExpiredCertificates(ctx context.Context) ([]api.Certific
 		Model(&db.Certificate{}).
 		Where("expire_at <= ?", time.Now()).
 		Preload("Domains").
+		Preload("Addresses").
 		Preload("Units").
 		Find(&nodes).
 		Error
@@ -429,6 +453,7 @@ func (srv *Service) ListSoonExpireCertificates(ctx context.Context) ([]api.Certi
 		Model(&db.Certificate{}).
 		Where("expire_at > ? AND expire_at <= ?", now, now.Add(srv.soon)).
 		Preload("Domains").
+		Preload("Addresses").
 		Preload("Units").
 		Find(&nodes).
 		Error
@@ -504,6 +529,9 @@ func mapCert(header *db.Certificate) api.Certificate {
 	}
 	for _, field := range header.Units {
 		n.Units = append(n.Units, field.Name)
+	}
+	for _, addr := range header.Addresses {
+		n.Ips = append(n.Ips, addr.IP)
 	}
 	return n
 }

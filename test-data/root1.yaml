@@ -12,6 +12,8 @@ nested:
       domains:
         - child1-a.example.com
         - child1-b.example.com
+      ips:
+        - 127.0.0.1
       days: 365
   - certificate:
       name: child2

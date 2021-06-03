@@ -8,7 +8,8 @@
               :label="label"
               :hint="hint"
               v-model="newValue"
-              append-outer-icon="mdi-add"
+              @click:append-outer="add"
+              append-outer-icon="mdi-plus"
           />
         </v-form>
       </v-list-item-content>

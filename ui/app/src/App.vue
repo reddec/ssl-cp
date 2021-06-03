@@ -69,6 +69,15 @@
             <v-list-item-title>Nginx TLS</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item link :to="{name:'cookbook-clients', params:{id:selected.certificate.id}}">
+          <v-list-item-icon>
+            <v-icon>mdi-handshake</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>Client usages</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 

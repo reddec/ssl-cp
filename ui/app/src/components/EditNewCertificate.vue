@@ -42,6 +42,15 @@
                 :value="local.units"
                 @change="patch('units', $event)"/>
           </v-card-text>
+          <v-card-text  v-if="!isCA">
+            <list-edit
+                title="IP addresses"
+                label="IP"
+                hint="will be added as /SAN IP in the certificate"
+                icon="mdi-ip"
+                :value="local.ips"
+                @change="patch('ips', $event)"/>
+          </v-card-text>
           <v-card-text v-if="!isCA">
             <list-edit
                 title="Domains (Subject Alternative Name)"

@@ -14,6 +14,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net"
 	"strconv"
 	"strings"
 	"time"
@@ -53,6 +54,7 @@ func (srv *Service) decrypt(text string) (string, error) {
 }
 
 type certificate struct {
+	Addresses           []net.IP
 	Subject             api.Subject
 	ExpiredAt           time.Time
 	Issuer              *db.Certificate
@@ -84,6 +86,13 @@ func (srv *Service) generateSignedCertificate(ctx context.Context, subject api.S
 		subject.Ca = true
 	}
 
+	var addrs = make([]net.IP, 0, len(subject.Ips))
+	for _, ip := range subject.Ips {
+		if v := net.ParseIP(ip); v != nil {
+			addrs = append(addrs, v)
+		}
+	}
+
 	cert := &x509.Certificate{
 		SerialNumber: serial,
 		Subject: pkix.Name{
@@ -93,6 +102,7 @@ func (srv *Service) generateSignedCertificate(ctx context.Context, subject api.S
 			ExtraNames:         []pkix.AttributeTypeAndValue{},
 		},
 		DNSNames:              subject.Domains,
+		IPAddresses:           addrs,
 		IsCA:                  subject.Ca,
 		NotBefore:             time.Now(),
 		NotAfter:              time.Now().AddDate(0, 0, int(subject.Days)),
@@ -152,6 +162,7 @@ func (srv *Service) generateSignedCertificate(ctx context.Context, subject api.S
 	}
 
 	return &certificate{
+		Addresses:           addrs,
 		Subject:             subject,
 		ExpiredAt:           cert.NotAfter,
 		Issuer:              issuer,

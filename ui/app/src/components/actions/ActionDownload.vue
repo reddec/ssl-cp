@@ -1,6 +1,9 @@
 <template>
   <v-btn text color="primary" @click="download" :loading="generating">
-   <v-icon>mdi-download</v-icon> download
+    <slot>
+      <v-icon>mdi-download</v-icon>
+      download
+    </slot>
   </v-btn>
 </template>
 
@@ -8,10 +11,10 @@
 import Vue from "vue";
 import Component from "vue-class-component";
 import {Emit, Prop} from "vue-property-decorator";
-import {API} from "../../store";
 import {Certificate} from "../../api";
 import JSZip from "jszip";
 import {saveAs} from 'file-saver';
+import {downloadCertAssets} from "@/lib/utils";
 
 @Component
 export default class ActionDownload extends Vue {
@@ -25,36 +28,28 @@ export default class ActionDownload extends Vue {
   async download() {
     this.generating = true;
     try {
-      const [
-        publicCert,
-        caCerts,
-      ] = await Promise.all([
-        API.getPublicCert(this.certificate.id!).then((x) => x.data),
-        Promise.all((this.chain || [])
-            .filter((c) => c.id !== this.certificate.id)
-            .map((cert) => API.getPublicCert(cert.id!).then((x) => x.data))),
-      ])
-      let privateKey;
-      if (!this.certificate.ca) {
-        privateKey = (await API.getPrivateKey(this.certificate.id!)).data;
-      }
+      const assets = await downloadCertAssets(this.chain || [this.certificate]);
+
 
       let zip = new JSZip()
-      zip.file('cert.pem', publicCert)
-      if (privateKey) {
-        zip.file('key.pem', privateKey)
+      zip.file('cert.pem', assets.cert)
+      zip.file('revoked.pem', assets.revoked.join("\n"))
+      if (assets.key) {
+        zip.file('key.pem', assets.key)
       }
 
-      let fullchain = publicCert;
+      let fullchain = assets.cert;
 
-      if (caCerts.length > 0) {
-        const ca = caCerts.join('\n')
+      if (assets.caCerts.length > 0) {
+        const ca = assets.caCerts.join('\n')
         fullchain += '\n' + ca
         zip.file('ca.pem', ca)
       }
-      if (privateKey) {
-        fullchain += '\n' + privateKey
+      if (assets.key) {
+        fullchain += '\n' + assets.key
       }
+
+      fullchain += '\n' + assets.revoked.join("\n")
 
       zip.file('fullchain.pem', fullchain)
       const content = await zip.generateAsync({type: 'blob'})

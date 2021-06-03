@@ -10,6 +10,7 @@ import (
 type Renewal struct {
 	Days    uint     `json:"days,omitempty"`
 	Domains []string `json:"domains,omitempty"`
+	Ips     []string `json:"ips,omitempty"`
 	Units   []string `json:"units,omitempty"`
 }
 
@@ -19,6 +20,7 @@ type Subject struct {
 	Days    uint     `json:"days,omitempty"`
 	Ca      bool     `json:"ca,omitempty"`
 	Domains []string `json:"domains,omitempty"`
+	Ips     []string `json:"ips,omitempty"`
 	Units   []string `json:"units,omitempty"`
 }
 
@@ -29,6 +31,7 @@ type Certificate struct {
 	Ca        bool      `json:"ca,omitempty"`
 	Name      string    `json:"name,omitempty"`
 	Domains   []string  `json:"domains,omitempty"`
+	Ips       []string  `json:"ips,omitempty"`
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	ExpireAt  time.Time `json:"expire_at,omitempty"`

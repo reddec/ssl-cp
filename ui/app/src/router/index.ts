@@ -6,7 +6,7 @@ import CertificateLayout from "@/views/certificate/layout.vue";
 import Expired from "@/views/Expired.vue";
 import SoonExpire from "@/views/SoonExpire.vue";
 import NginxServer from "@/views/cookbooks/NginxServer.vue";
-
+import Clients from "@/views/cookbooks/Clients.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,6 +29,11 @@ const routes = [
                 path: 'cookbook/nginx-server',
                 name: 'cookbook-nginx-server',
                 component: NginxServer
+            },
+            {
+                path: 'cookbook/clients',
+                name: 'cookbook-clients',
+                component: Clients
             }
         ]
     },

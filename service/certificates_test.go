@@ -41,6 +41,7 @@ func TestServiceImpl_CreateCertificate(t *testing.T) {
 			Name:    "example.com",
 			Days:    365,
 			Domains: []string{"abc.local", "xyz.local"},
+			Ips:     []string{"127.0.0.1", "1.2.3.4"},
 			Units:   []string{"john dow", "john@example.com"},
 		})
 		assert.NoError(t, err)
@@ -50,6 +51,8 @@ func TestServiceImpl_CreateCertificate(t *testing.T) {
 		assert.NotEmpty(t, ca.CreatedAt)
 		assert.Contains(t, ca.Domains, "abc.local")
 		assert.Contains(t, ca.Domains, "xyz.local")
+		assert.Contains(t, ca.Ips, "127.0.0.1")
+		assert.Contains(t, ca.Ips, "1.2.3.4")
 		assert.Contains(t, ca.Units, "john dow")
 		assert.Contains(t, ca.Units, "john@example.com")
 	})
@@ -885,6 +888,22 @@ func TestService_RenewCertificate(t *testing.T) {
 
 		assert.Len(t, newRoot.Units, 1)
 		assert.Equal(t, "c", newRoot.Units[0])
+	})
+	t.Run("renew IP", func(t *testing.T) {
+		root, err := srv.CreateCertificate(ctx, api.Subject{
+			Name: "example2",
+			Days: 365,
+			Ips:  []string{"127.0.0.1", "1.2.3.4"},
+		})
+		assert.NoError(t, err)
+		newRoot, err := srv.RenewCertificate(ctx, root.Id, api.Renewal{
+			Days: 400,
+			Ips:  []string{"5.6.7.8"},
+		})
+		assert.NoError(t, err)
+
+		assert.Len(t, newRoot.Ips, 1)
+		assert.Equal(t, "5.6.7.8", newRoot.Ips[0])
 	})
 }
 

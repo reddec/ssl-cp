@@ -38,19 +38,22 @@
               v-model="renewal.units"/>
         </v-card-text>
         <v-card-text v-if="!certificate.ca">
-
-          <v-card-text>
-            <list-edit
-                title="Domains (Subject Alternative Name)"
-                label="Domain name"
-                hint="will be added as /SAN in certificate subject"
-                icon="mdi-domain"
-                v-model="renewal.domains"/>
-          </v-card-text>
+          <list-edit
+              title="IP addresses"
+              label="IP"
+              hint="will be added as /SAN IP in the certificate"
+              icon="mdi-ip"
+              v-model="renewal.ips"/>
+          <list-edit
+              title="Domains (Subject Alternative Name)"
+              label="Domain name"
+              hint="will be added as /SAN DNS in certificate subject"
+              icon="mdi-domain"
+              v-model="renewal.domains"/>
         </v-card-text>
         <v-card-actions>
           <v-btn color="success" text :loading="renewing" @click="renew">
-            <v-icon>mdi-plus</v-icon>
+            <v-icon>mdi-restart</v-icon>
             renew
           </v-btn>
         </v-card-actions>
@@ -79,13 +82,15 @@ export default class ActionRenew extends Vue {
   renewal: Renewal = {
     days: 0,
     domains: [],
-    units: []
+    units: [],
+    ips: [],
   }
   dialog: boolean = false;
 
   showDialog() {
     this.renewal.domains = [...(this.certificate.domains || [])];
     this.renewal.units = [...(this.certificate.units || [])];
+    this.renewal.ips = [...(this.certificate.ips || [])];
     this.renewal.days = dayjs(this.certificate.expire_at).diff(this.certificate.updated_at || '', 'days');
     this.dialog = true;
   }
